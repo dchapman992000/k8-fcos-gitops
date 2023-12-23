@@ -1,7 +1,7 @@
 #!/bin/sh
 
 KUBECONFIG=/etc/kubernetes/admin.conf
-FLUX_SYSTEM_DIR="./k8-fcos-gitops/clusters/cluster1/flux-system"
+FLUX_SYSTEM_DIR="./clusters/cluster1/flux-system"
 
 echo "Applying gotk-components"
 kubectl apply -f $FLUX_SYSTEM_DIR/gotk-components.yaml
