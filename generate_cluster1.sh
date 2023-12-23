@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 flux create source git k8-fos-gitops \
     --url=https://https://github.com/dcatwoohoo/k8-fcos-gitops \
