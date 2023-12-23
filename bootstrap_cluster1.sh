@@ -1,3 +1,13 @@
 #!/bin/sh
 
-kubectl apply -k ./clusters/cluster1/flux-system
+KUBECONFIG=/etc/kubernetes/admin.conf
+FLUX_SYSTEM_DIR="./k8-fcos-gitops/clusters/cluster1/flux-system"
+
+echo "Applying gotk-components"
+kubectl apply -f $FLUX_SYSTEM_DIR/gotk-components.yaml
+
+echo "Sleeping 5 seconds"
+sleep 5
+
+echo "Applying gotk-sync"
+kubectl apply -f $FLUX_SYSTEM_DIR/gotk-sync.yaml
