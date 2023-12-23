@@ -1,6 +1,6 @@
 #!/bin/sh
 
-KUBECONFIG=/etc/kubernetes/admin.conf
+export KUBECONFIG=/etc/kubernetes/admin.conf
 FLUX_SYSTEM_DIR="./clusters/cluster1/flux-system"
 
 echo "Applying gotk-components"
