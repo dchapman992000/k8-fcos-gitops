@@ -1,6 +1,13 @@
 #!/bin/sh
 
-export KUBECONFIG=/etc/kubernetes/admin.conf
+kubectl version >/dev/null 2>&1
+
+if [ $? -ne 0 ] 
+then 
+  export KUBECONFIG=/etc/kubernetes/admin.conf
+  echo "Exporting KUBECONFIG - $KUBECONFIG" 
+fi
+
 FLUX_SYSTEM_DIR="./clusters/cluster1/flux-system"
 
 echo "Applying gotk-components"
