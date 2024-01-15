@@ -23,4 +23,3 @@ spec:
         name: jetstack
         namespace: cert-manager
       interval: 1m
- 

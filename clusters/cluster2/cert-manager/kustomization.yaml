@@ -4,3 +4,4 @@ resources:
 - cert-manager-namespace.yaml
 - cert-manager-crd.yaml
 - cert-manager-flux-helm.yaml
+- ca.yaml
