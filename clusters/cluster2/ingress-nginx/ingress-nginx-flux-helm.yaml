@@ -30,3 +30,8 @@ spec:
         nodePorts:
           http: 30167
           https: 32483
+      metrics:
+        enabled: true
+      podAnnotations:
+        prometheus.io/port: "10254"
+        prometheus.io/scrape: "true"
