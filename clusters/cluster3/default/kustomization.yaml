@@ -4,3 +4,4 @@ resources:
 - cloudflared.yaml
 - tools.woohoosvcs.com.yaml
 - root.woohoosvcs.com.yaml
+- tunnel-credentials.yaml
