@@ -16,5 +16,5 @@ flux create kustomization k8-fcos-gitops \
     --prune=true \
     --interval=5m \
     --decryption-provider=sops \
-    --decryption-secret=sops-age
+    --decryption-secret=sops-age \
     --export >> $GOTKSYNC
