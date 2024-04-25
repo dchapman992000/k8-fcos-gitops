@@ -83,4 +83,6 @@ data:
       service: http://tools-service:80
     - hostname: kindcluster-root.woohoosvcs.com
       service: http://root-service:80
+    - hostname: kindcluster-chatbot.woohoosvcs.com
+      service: http://chatbot-service:80
     - service: http_status:404
