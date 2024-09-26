@@ -86,7 +86,7 @@ data:
     - hostname: kindcluster-chatbot.woohoosvcs.com
       service: http://chatbot-service:80
     - hostname: kindcluster-tracker.woohoosvcs.com
-      service: http://tracker-api-service:80
-    - hostname: kindcluster-tracker-api.woohoosvcs.com
       service: http://tracker-service:80
+    - hostname: kindcluster-tracker-api.woohoosvcs.com
+      service: http://tracker-api-service:80
     - service: http_status:404
