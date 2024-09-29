@@ -17,6 +17,7 @@ spec:
       containers:
       - name: cloudflared
         image: cloudflare/cloudflared:2024.9.1
+        imagePullPolicy: "IfNotPresent"
         resources:
         args:
         - tunnel
