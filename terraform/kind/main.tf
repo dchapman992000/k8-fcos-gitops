@@ -7,38 +7,22 @@ terraform {
       version = ">= 0.4"
     }
     kubectl = {
-      source  = "alekc/kubectl"
-      version = "~> 2.0"
-    }
-    github = {
-      source = "integrations/github"
-      version = "6.3.1"
+      source  = "gavinbunney/kubectl"
+      version = ">= 1.7.0"
     }
     kubernetes = {
       source = "hashicorp/kubernetes"
-      version = "2.33.0"
+      version = ">= 2.33.0"
     }
   }
 }
 
-data "github_repository_file" "gotk-components" {
-  repository          = "${var.github_org}/${var.github_repository}"
-  branch              = "main"
-  file                = var.gotk-components_path
-}
-
-data "github_repository_file" "gotk-sync" {
-  repository          = "${var.github_org}/${var.github_repository}"
-  branch              = "main"
-  file                = var.gotk-sync_path
-}
-
 data "kubectl_file_documents" "gotk-components" {
-    content = data.github_repository_file.gotk-components.content
+    content = file("${path.module}/../../clusters/cluster3/flux-system/gotk-components.yaml")
 }
 
 data "kubectl_file_documents" "gotk-sync" {
-    content = data.github_repository_file.gotk-sync.content
+    content = file("${path.module}/../../clusters/cluster3/flux-system/gotk-sync.yaml")
 }
 
 resource "kind_cluster" "this" {
