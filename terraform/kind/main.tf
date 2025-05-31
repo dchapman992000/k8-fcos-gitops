@@ -6,23 +6,15 @@ terraform {
       source  = "tehcyx/kind"
       version = ">= 0.4"
     }
-    kubectl = {
-      source  = "gavinbunney/kubectl"
-      version = ">= 1.7.0"
-    }
-    kubernetes = {
-      source = "hashicorp/kubernetes"
-      version = ">= 2.33.0"
+    null = {
+      source = "hashicorp/null"
+      version = ">= 3.2.4"
     }
   }
 }
 
-data "kubectl_file_documents" "gotk-components" {
-    content = file("${path.module}/../../clusters/cluster3/flux-system/gotk-components.yaml")
-}
-
-data "kubectl_file_documents" "gotk-sync" {
-    content = file("${path.module}/../../clusters/cluster3/flux-system/gotk-sync.yaml")
+locals {
+    k8s_config_path = pathexpand("~/.kube/config")
 }
 
 resource "kind_cluster" "this" {
@@ -31,25 +23,43 @@ resource "kind_cluster" "this" {
   wait_for_ready = true
 }
 
-resource "kubectl_manifest" "gotk-components" {
-  depends_on = [ kind_cluster.this ]
-  for_each  = data.kubectl_file_documents.gotk-components.manifests
-  yaml_body = each.value
+resource "null_resource" "kubectl_apply_flux_gotk_components" {
+  provisioner "local-exec" {
+    command = "kubectl apply -f ${path.module}/../../clusters/cluster3/flux-system/gotk-components.yaml --kubeconfig=${local.k8s_config_path} --context=kind-${var.kind_cluster_name}"
+  }
+
+  triggers = {
+    always_run = timestamp()
+  }
+
+  depends_on = [kind_cluster.this]
 }
 
-resource "kubernetes_secret" "sops" {
-  depends_on = [kubectl_manifest.gotk-components]
-  metadata {
-    name = "sops-age"
-    namespace = "flux-system"
+resource "null_resource" "kubectl_create_sops_secret" {
+  provisioner "local-exec" {
+    command = <<EOT
+      kubectl --kubeconfig=${local.k8s_config_path} --context=kind-${var.kind_cluster_name} \
+        -n flux-system create secret generic sops-age \
+        --from-file=age.agekey=${var.sops_age_key_path} \
+        --dry-run=client -o yaml | kubectl --kubeconfig=${local.k8s_config_path} --context=kind-${var.kind_cluster_name} apply -f -
+    EOT
   }
-  data = {
-    "age.agekey" = file(var.sops_age_key_path)
+
+  triggers = {
+    always_run = timestamp()
   }
+
+  depends_on = [null_resource.kubectl_apply_flux_gotk_components]
 }
 
-resource "kubectl_manifest" "gotk-sync" {
-  depends_on = [ kind_cluster.this, kubernetes_secret.sops ]
-  for_each  = data.kubectl_file_documents.gotk-sync.manifests
-  yaml_body = each.value
+resource "null_resource" "kubectl_apply_flux_gotk_sync" {
+  provisioner "local-exec" {
+    command = "kubectl apply -f ${path.module}/../../clusters/cluster3/flux-system/gotk-sync.yaml --kubeconfig=${local.k8s_config_path} --context=kind-${var.kind_cluster_name}"
+  }
+
+  triggers = {
+    always_run = timestamp()
+  }
+
+  depends_on = [null_resource.kubectl_create_sops_secret]
 }
