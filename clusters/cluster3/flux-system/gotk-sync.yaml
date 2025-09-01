@@ -9,7 +9,7 @@ spec:
   interval: 3m0s
   ref:
     branch: main
-  url: https://github.com/dcatwoohoo/k8-fcos-gitops
+  url: https://github.com/dchapman992000/k8-fcos-gitops
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization

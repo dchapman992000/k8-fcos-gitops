@@ -35,3 +35,10 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Local kind kubeconfig used for tests
+terraform/kind/woohoosvcs-config
+
+# Common kubeconfig patterns
+*.kubeconfig
+**/woohoosvcs-config
