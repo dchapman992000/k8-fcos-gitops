@@ -20,12 +20,10 @@ if ! command -v kubectl >/dev/null 2>&1; then
   exit 4
 fi
 
-# Ensure namespace exists (idempotent)
-kubectl --kubeconfig="$KUBECONFIG_PATH" --context="$KUBE_CONTEXT" create namespace flux-system --dry-run=client -o yaml | kubectl --kubeconfig="$KUBECONFIG_PATH" --context="$KUBE_CONTEXT" apply -f -
-
-# Create or update secret from file without exposing contents to Terraform state.
+# Namespace creation is handled by Terraform (`kubectl_apply_flux_namespace`).
+# The script only creates/updates the sops secret to avoid redundant namespace operations.
 kubectl --kubeconfig="$KUBECONFIG_PATH" --context="$KUBE_CONTEXT" \
-  create secret generic sops-age -n flux-system --from-file=age.key="$AGE_KEY_PATH" --dry-run=client -o yaml \
+  create secret generic sops-age -n flux-system --from-file=age.agekey="$AGE_KEY_PATH" --dry-run=client -o yaml \
   | kubectl --kubeconfig="$KUBECONFIG_PATH" --context="$KUBE_CONTEXT" apply -f -
 
 exit 0

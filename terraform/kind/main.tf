@@ -64,7 +64,7 @@ resource "null_resource" "kubectl_create_sops_secret" {
     sops_key_hash = filemd5(var.sops_age_key_path)
     cluster_id    = kind_cluster.this.id
   }
-  depends_on = [null_resource.kubectl_apply_flux_gotk_components]
+  depends_on = [null_resource.kubectl_apply_flux_gotk_components, null_resource.wait_for_kube]
 }
 
 resource "null_resource" "wait_for_crds" {
