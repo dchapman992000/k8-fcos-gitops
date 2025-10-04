@@ -16,9 +16,15 @@ spec:
     spec:
       containers:
       - name: cloudflared
-        image: cloudflare/cloudflared:2025.5.0
+        image: cloudflare/cloudflared:2025.9.1
         imagePullPolicy: "IfNotPresent"
-        resources: {}
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
         args:
         - tunnel
         # Points cloudflared to the config file, which configures what
